@@ -5,7 +5,7 @@ Multi-page static academic website for A-Young Park, Ph.D., Senior Researcher at
 ## Pages
 
 - `index.html` — profile and research interests
-- `publications.html` — selected publications and working papers
+- `publications.html` — research outputs, selected publications, and working papers
 - `funding.html` — research funding
 - `service.html` — academic service
 - `conferences.html` — presentations, invited talks, and discussions
