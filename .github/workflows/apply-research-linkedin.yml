@@ -28,7 +28,9 @@ jobs:
           github_anchor = '<a href="https://github.com/Ayppark" target="_blank" rel="me noopener noreferrer">GitHub</a>'
           linkedin_anchor = f'{github_anchor}\n        <a href="{linkedin}" target="_blank" rel="me noopener noreferrer">LinkedIn</a>'
 
-          for path in sorted(root.glob('*.html')):
+          html_pages = [p for p in sorted(root.glob('*.html')) if not p.name.startswith('google')]
+
+          for path in html_pages:
               text = path.read_text(encoding='utf-8')
 
               text = re.sub(r'(<a href="publications\.html"[^>]*>)Publications(</a>)', r'\1Research\2', text)
@@ -64,10 +66,10 @@ jobs:
           workflow = root / '.github' / 'workflows' / 'apply-research-linkedin.yml'
           workflow.unlink(missing_ok=True)
 
-          for path in root.glob('*.html'):
+          for path in html_pages:
               text = path.read_text(encoding='utf-8')
-              assert 'href="publications.html"' not in text or '>Research</a>' in text
-              assert 'linkedin.com/in/ayoungp' in text
+              assert 'href="publications.html"' not in text or '>Research</a>' in text, path.name
+              assert 'linkedin.com/in/ayoungp' in text, path.name
           assert '"https://kr.linkedin.com/in/ayoungp"' in (root / 'index.html').read_text(encoding='utf-8')
           PY
 
