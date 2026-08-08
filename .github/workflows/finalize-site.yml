@@ -1,0 +1,345 @@
+name: Finalize CV page and SEO
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/finalize-site.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build CV page and technical SEO
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import html
+          import re
+          import shutil
+
+          ROOT = Path('.')
+          BASE = 'https://ayppark.github.io'
+          PROFILE_IMAGE = f'{BASE}/assets/profile.jpg'
+          CV_FILE = ROOT / 'assets' / 'Ayoung_Park_CV.pdf'
+
+          if not CV_FILE.exists() or CV_FILE.stat().st_size < 70000:
+              raise RuntimeError('The restored full CV PDF is missing or unexpectedly small.')
+
+          page_meta = {
+              'index.html': {
+                  'title': 'A-Young Park, Ph.D. | Senior Researcher, Financial Supervisory Service',
+                  'description': 'Academic homepage of A-Young Park, Ph.D., Senior Researcher at the Financial Supervisory Service. Research on financial networks, systemic risk, financial intermediation, computational finance, and digital finance.',
+                  'url': f'{BASE}/',
+                  'type': 'profile',
+              },
+              'publications.html': {
+                  'title': 'Publications | A-Young Park, Ph.D.',
+                  'description': 'Selected journal publications and working papers by A-Young Park, Ph.D., Senior Researcher at the Financial Supervisory Service.',
+                  'url': f'{BASE}/publications.html',
+                  'type': 'website',
+              },
+              'funding.html': {
+                  'title': 'Research Funding | A-Young Park, Ph.D.',
+                  'description': 'Research funding awarded to A-Young Park, including a KRW 200 million National Research Foundation of Korea grant.',
+                  'url': f'{BASE}/funding.html',
+                  'type': 'website',
+              },
+              'service.html': {
+                  'title': 'Academic Service | A-Young Park, Ph.D.',
+                  'description': 'Journal reviewing, conference reviewing, session chairing, and professional service by A-Young Park, Ph.D.',
+                  'url': f'{BASE}/service.html',
+                  'type': 'website',
+              },
+              'conferences.html': {
+                  'title': 'Conferences | A-Young Park, Ph.D.',
+                  'description': 'Conference presentations, invited talks, and conference discussions by A-Young Park, Ph.D.',
+                  'url': f'{BASE}/conferences.html',
+                  'type': 'website',
+              },
+              'cv.html': {
+                  'title': 'Curriculum Vitae | A-Young Park, Ph.D.',
+                  'description': 'Curriculum vitae of A-Young Park, Ph.D., Senior Researcher at the Financial Supervisory Service. Updated March 2026.',
+                  'url': f'{BASE}/cv.html',
+                  'type': 'website',
+              },
+          }
+
+          def seo_block(meta):
+              title = html.escape(meta['title'], quote=True)
+              description = html.escape(meta['description'], quote=True)
+              url = html.escape(meta['url'], quote=True)
+              og_type = html.escape(meta['type'], quote=True)
+              return f'''\n      <!-- SEO START -->
+      <meta name="robots" content="index, follow">
+      <link rel="canonical" href="{url}">
+      <meta property="og:site_name" content="A-Young Park Academic Homepage">
+      <meta property="og:type" content="{og_type}">
+      <meta property="og:title" content="{title}">
+      <meta property="og:description" content="{description}">
+      <meta property="og:url" content="{url}">
+      <meta property="og:image" content="{PROFILE_IMAGE}">
+      <meta property="og:image:alt" content="Portrait of A-Young Park">
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="{title}">
+      <meta name="twitter:description" content="{description}">
+      <meta name="twitter:image" content="{PROFILE_IMAGE}">
+      <!-- SEO END -->'''
+
+          def apply_seo(path, meta):
+              text = path.read_text(encoding='utf-8')
+              text = re.sub(r'\n\s*<!-- SEO START -->.*?<!-- SEO END -->', '', text, flags=re.S)
+              text = re.sub(r'<title>.*?</title>', f'<title>{html.escape(meta["title"])}</title>', text, count=1, flags=re.S)
+              text = re.sub(
+                  r'<meta name="description" content="[^"]*">',
+                  f'<meta name="description" content="{html.escape(meta["description"], quote=True)}">',
+                  text,
+                  count=1,
+              )
+              marker = '<meta name="theme-color" content="#ffffff">'
+              if marker not in text:
+                  raise RuntimeError(f'Missing theme-color marker in {path}')
+              text = text.replace(marker, marker + seo_block(meta), 1)
+              path.write_text(text, encoding='utf-8')
+
+          # Replace the old direct-PDF navigation item with a dedicated CV page.
+          old_cv_link = '<a href="assets/Ayoung_Park_CV.pdf" target="_blank" rel="noopener">CV</a>'
+          new_cv_link = '<a href="cv.html">CV</a>'
+          for filename in ('index.html', 'publications.html', 'funding.html', 'service.html', 'conferences.html'):
+              path = ROOT / filename
+              text = path.read_text(encoding='utf-8')
+              text = text.replace(old_cv_link, new_cv_link)
+              path.write_text(text, encoding='utf-8')
+
+          # Strengthen the homepage Person structured data without disclosing education.
+          home = ROOT / 'index.html'
+          home_text = home.read_text(encoding='utf-8')
+          if '"url": "https://ayppark.github.io/"' not in home_text:
+              home_text = home_text.replace(
+                  '"alternateName": "박아영",',
+                  '"alternateName": ["Ayoung Park", "A-Young Park", "박아영"],\n            "url": "https://ayppark.github.io/",\n            "image": "https://ayppark.github.io/assets/profile.jpg",\n            "knowsAbout": ["Financial networks", "Systemic risk", "Financial intermediation", "Computational finance", "Digital finance"],',
+                  1,
+              )
+          home.write_text(home_text, encoding='utf-8')
+
+          cv_template = '''<!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <title>Curriculum Vitae | A-Young Park, Ph.D.</title>
+            <meta name="description" content="Curriculum vitae of A-Young Park, Ph.D., Senior Researcher at the Financial Supervisory Service. Updated March 2026.">
+            <meta name="author" content="A-Young Park">
+            <meta name="theme-color" content="#ffffff">
+
+            <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+            <link rel="stylesheet" href="style.css">
+          </head>
+          <body>
+            <a class="skip-link" href="#main-content">Skip to main content</a>
+
+            <div class="page">
+              <aside class="profile" aria-label="Researcher profile">
+                <a class="photo-link" href="index.html" aria-label="Go to homepage">
+                  <img class="profile-photo" src="assets/profile.jpg" alt="Portrait of A-Young Park" width="176" height="220">
+                </a>
+
+                <h1><a href="index.html">A-Young Park, Ph.D.</a></h1>
+                <p class="name-ko">박아영</p>
+                <p class="position">Senior Researcher</p>
+                <p class="affiliation">Financial Supervisory Service<br>Seoul, Republic of Korea</p>
+
+                <nav class="profile-links" aria-label="Academic profiles">
+                  <a href="mailto:ayoungp@fss.or.kr">Email</a>
+                  <a href="https://scholar.google.com/citations?user=jGiQJnYAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+                  <a href="https://orcid.org/0000-0002-0753-5046" target="_blank" rel="noopener noreferrer">ORCID</a>
+                  <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5040197" target="_blank" rel="noopener noreferrer">SSRN</a>
+                  <a href="https://github.com/Ayppark" target="_blank" rel="me noopener noreferrer">GitHub</a>
+                </nav>
+              </aside>
+
+              <main id="main-content" class="content">
+                <nav class="top-nav" aria-label="Primary navigation">
+                  <a href="index.html">Home</a>
+                  <a href="publications.html">Publications</a>
+                  <a href="funding.html">Funding</a>
+                  <a href="service.html">Academic Service</a>
+                  <a href="conferences.html">Conferences</a>
+                  <a href="cv.html" class="active" aria-current="page">CV</a>
+                </nav>
+
+                <section aria-labelledby="cv-title">
+                  <h2 id="cv-title">Curriculum Vitae</h2>
+                  <article class="cv-panel">
+                    <p class="cv-updated">CV updated: March 2026</p>
+                    <p class="lead">My full academic curriculum vitae is available as a six-page PDF.</p>
+                    <p class="cv-summary">It includes appointments, education, publications, research funding, teaching, awards, conference participation, academic service, skills, and references.</p>
+                    <div class="button-row">
+                      <a class="button" href="assets/Ayoung_Park_CV.pdf" target="_blank" rel="noopener">View CV (PDF)</a>
+                      <a class="button secondary" href="assets/Ayoung_Park_CV.pdf" download="Ayoung_Park_CV_March_2026.pdf">Download CV</a>
+                    </div>
+                    <p class="note">PDF · 6 pages · Updated March 2026</p>
+                  </article>
+                </section>
+
+                <footer>
+                  <p>© 2026 A-Young Park.</p>
+                  <p class="disclaimer">The views expressed on this personal website are my own and do not necessarily reflect those of the Financial Supervisory Service.</p>
+                </footer>
+              </main>
+            </div>
+          </body>
+          </html>
+          '''
+          cv_text = '\n'.join(line[10:] if line.startswith('          ') else line for line in cv_template.splitlines()).strip() + '\n'
+          (ROOT / 'cv.html').write_text(cv_text, encoding='utf-8')
+
+          # Apply technical metadata after creating the CV page.
+          for filename, meta in page_meta.items():
+              apply_seo(ROOT / filename, meta)
+
+          css_path = ROOT / 'style.css'
+          css = css_path.read_text(encoding='utf-8')
+          css = re.sub(r'\n/\* CV PAGE START \*/.*?/\* CV PAGE END \*/\n?', '\n', css, flags=re.S)
+          css += '''
+
+/* CV PAGE START */
+.cv-panel {
+  padding: 27px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+
+.cv-updated {
+  margin-bottom: 8px;
+  color: var(--link);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.cv-summary {
+  color: #4f4f4f;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 18px;
+}
+
+.button {
+  display: inline-block;
+  padding: 9px 15px;
+  border: 1px solid var(--link);
+  border-radius: 4px;
+  background: var(--link);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.button:hover,
+.button:focus-visible {
+  color: #fff;
+  background: var(--link-hover);
+  text-decoration: none;
+}
+
+.button.secondary {
+  color: var(--link);
+  background: #fff;
+}
+
+.button.secondary:hover,
+.button.secondary:focus-visible {
+  color: var(--link-hover);
+  background: #f7f9fb;
+}
+/* CV PAGE END */
+'''
+          css_path.write_text(css, encoding='utf-8')
+
+          (ROOT / 'robots.txt').write_text(
+              'User-agent: *\nAllow: /\n\nSitemap: https://ayppark.github.io/sitemap.xml\n',
+              encoding='utf-8',
+          )
+
+          urls = [
+              ('https://ayppark.github.io/', '1.0'),
+              ('https://ayppark.github.io/publications.html', '0.9'),
+              ('https://ayppark.github.io/funding.html', '0.7'),
+              ('https://ayppark.github.io/service.html', '0.7'),
+              ('https://ayppark.github.io/conferences.html', '0.7'),
+              ('https://ayppark.github.io/cv.html', '0.8'),
+          ]
+          sitemap_rows = '\n'.join(
+              f'  <url>\n    <loc>{url}</loc>\n    <lastmod>2026-08-08</lastmod>\n    <priority>{priority}</priority>\n  </url>'
+              for url, priority in urls
+          )
+          (ROOT / 'sitemap.xml').write_text(
+              '<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+              f'{sitemap_rows}\n'
+              '</urlset>\n',
+              encoding='utf-8',
+          )
+
+          (ROOT / 'README.md').write_text('''# A-Young Park — Academic Homepage
+
+Multi-page static academic website for A-Young Park, Ph.D., Senior Researcher at the Financial Supervisory Service.
+
+## Pages
+
+- `index.html` — profile and research interests
+- `publications.html` — selected publications and working papers
+- `funding.html` — research funding
+- `service.html` — academic service
+- `conferences.html` — presentations, invited talks, and discussions
+- `cv.html` — CV landing page with view and download buttons
+
+The full six-page academic CV is stored at `assets/Ayoung_Park_CV.pdf` and is marked as updated in March 2026.
+Technical search files include `robots.txt`, `sitemap.xml`, canonical links, Open Graph metadata, and Person structured data.
+
+The site is published through GitHub Pages from the `main` branch and repository root.
+''', encoding='utf-8')
+
+          # Remove one-time binary assembly materials and this one-time finalizer.
+          shutil.rmtree(ROOT / '.cv-source', ignore_errors=True)
+          for temporary in (
+              ROOT / '.github' / 'workflows' / 'assemble-cv.yml',
+              ROOT / '.github' / 'workflows' / 'finalize-site.yml',
+          ):
+              temporary.unlink(missing_ok=True)
+
+          # Lightweight integrity checks.
+          for filename in page_meta:
+              text = (ROOT / filename).read_text(encoding='utf-8')
+              assert '<link rel="canonical"' in text
+              assert '<meta name="robots" content="index, follow">' in text
+              assert 'href="cv.html"' in text
+          assert 'CV updated: March 2026' in (ROOT / 'cv.html').read_text(encoding='utf-8')
+          assert (ROOT / 'robots.txt').exists()
+          assert (ROOT / 'sitemap.xml').exists()
+          PY
+
+      - name: Commit final website
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add CV page and technical SEO"
+          git push
