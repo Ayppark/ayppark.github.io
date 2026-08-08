@@ -522,3 +522,61 @@ footer p {
     color: inherit;
   }
 }
+
+
+/* CV PAGE START */
+.cv-panel {
+  padding: 27px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+
+.cv-updated {
+  margin-bottom: 8px;
+  color: var(--link);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.cv-summary {
+  color: #4f4f4f;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 18px;
+}
+
+.button {
+  display: inline-block;
+  padding: 9px 15px;
+  border: 1px solid var(--link);
+  border-radius: 4px;
+  background: var(--link);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.button:hover,
+.button:focus-visible {
+  color: #fff;
+  background: var(--link-hover);
+  text-decoration: none;
+}
+
+.button.secondary {
+  color: var(--link);
+  background: #fff;
+}
+
+.button.secondary:hover,
+.button.secondary:focus-visible {
+  color: var(--link-hover);
+  background: #f7f9fb;
+}
+/* CV PAGE END */

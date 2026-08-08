@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ayppark.github.io/sitemap.xml

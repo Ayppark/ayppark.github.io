@@ -9,5 +9,9 @@ Multi-page static academic website for A-Young Park, Ph.D., Senior Researcher at
 - `funding.html` — research funding
 - `service.html` — academic service
 - `conferences.html` — presentations, invited talks, and discussions
+- `cv.html` — CV landing page with view and download buttons
+
+The full six-page academic CV is stored at `assets/Ayoung_Park_CV.pdf` and is marked as updated in March 2026.
+Technical search files include `robots.txt`, `sitemap.xml`, canonical links, Open Graph metadata, and Person structured data.
 
 The site is published through GitHub Pages from the `main` branch and repository root.
