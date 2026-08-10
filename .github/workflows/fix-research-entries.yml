@@ -19,8 +19,68 @@ jobs:
       - name: Update Research page
         shell: bash
         run: |
-          echo 'CmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAoKcGFnZSA9IFBhdGgoInB1YmxpY2F0aW9ucy5odG1sIikKdGV4dCA9IHBhZ2UucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCgojIENvbnNpc3RlbnQgYXdhcmQtZGF0ZSBwbGFjZW1lbnQuCnRleHQgPSB0ZXh0LnJlcGxhY2UoCiAgICAiRk1BIDIwMjMgQmVzdCBQYXBlciBBd2FyZCBTZW1pZmluYWxpc3QsIEZpbmFuY2lhbCBJbnRlcm1lZGlhdGlvbiAmYW1wOyBNYXJrZXRzLiIsCiAgICAiRk1BIEJlc3QgUGFwZXIgQXdhcmQgU2VtaWZpbmFsaXN0LCBGaW5hbmNpYWwgSW50ZXJtZWRpYXRpb24gJmFtcDsgTWFya2V0cywgMjAyMy4iLAogICAgMSwKKQoKIyBSZW1vdmUgdGhlIGF1dGhvciBsaW5lIGZyb20gdGhlIEdsb2JhbCBCYW5raW5nIE5ldHdvcmtzIGVudHJ5IG9ubHkuCmdsb2JhbF90aXRsZSA9ICJHbG9iYWwgQmFua2luZyBOZXR3b3JrcyBhbmQgTG9hbiBQcmljaW5nIgpncG9zID0gdGV4dC5pbmRleChnbG9iYWxfdGl0bGUpCmdzdGFydCA9IHRleHQucmZpbmQoJzxhcnRpY2xlIGNsYXNzPSJwYXBlci1lbnRyeSI+JywgMCwgZ3BvcykKZ2VuZF9tYXJrZXIgPSAiPC9hcnRpY2xlPiIKZ2VuZCA9IHRleHQuaW5kZXgoZ2VuZF9tYXJrZXIsIGdwb3MpICsgbGVuKGdlbmRfbWFya2VyKQpnYmxvY2sgPSB0ZXh0W2dzdGFydDpnZW5kXQpnbG9iYWxfYXV0aG9yID0gJzxwIGNsYXNzPSJhdXRob3JzIj48c3Ryb25nPkEtWW91bmcgUGFyczwvc3Ryb25nPiBhbmQgR2FiamluIE9oPC9wPicKaWYgZ2xvYmFsX2F1dGhvciBub3QgaW4gZ2Jsb2NrOgogICAgcmFpc2UgUnVudGltZUVycm9yKCJHbG9iYWwgQmFua2luZyBhdXRob3IgbGluZSB3YXMgbm90IGZvdW5kIGluc2lkZSBpdHMgYXJ0aWNsZS4iKQpnYmxvY2sgPSBnYmxvY2sucmVwbGFjZShnbG9iYWxfYXV0aG9yLCAiIiwgMSkKdGV4dCA9IHRleHRbOmdzdGFydF0gKyBnYmxvY2sgKyB0ZXh0W2dlbmQ6XQoKIyBSZW1vdmUgSW52ZXN0b3IgU2VudGltZW50IGZyb20gV29ya2luZyBQYXBlcnMuCmludmVzdG9yX3RpdGxlID0gIkludmVzdG9yIFNlbnRpbWVudCBhbmQgU3RvY2sgUmV0dXJuIFByZWRpY3RhYmlsaXR5OiBUaGUgSW5mbHVlbmNlIG9mIE9ubGluZSBTdG9jayBEaXNjdXNzaW9uIEJvYXJkcyIKaXBvcyA9IHRleHQuaW5kZXgoaW52ZXN0b3JfdGl0bGUpCmlzdGFydCA9IHRleHQucmZpbmQoJzxhcnRpY2xlIGNsYXNzPSJwYXBlci1lbnRyeSI+JywgMCwgaXBvcykKaWVuZCA9IHRleHQuaW5kZXgoZ2VuZF9tYXJrZXIsIGlwb3MpICsgbGVuKGdlbmRfbWFya2VyKQppYmxvY2sgPSB0ZXh0W2lzdGFydDppZW5kXQppZiAnPHAgY2xhc3M9InBhcGVyLWtpY2tlciI+V29ya2luZyBwYXBlcjwvcD4nIG5vdCBpbiBpYmxvY2s6CiAgICByYWlzZSBSdW50aW1lRXJyb3IoIkludmVzdG9yIFNlbnRpbWVudCBlbnRyeSBpcyBub3QgY3VycmVudGx5IGluIFdvcmtpbmcgUGFwZXJzLiIpCnRleHQgPSB0ZXh0Wzppc3RhcnRdICsgdGV4dFtpZW5kOl0KCiMgQWRkIEludmVzdG9yIFNlbnRpbWVudCB0byBSZXNlYXJjaCBpbiBQcm9ncmVzcywgYWZ0ZXIgRm9yZWNhc3QgQ29uc2Vuc3VzLgpmb3JlY2FzdF90aXRsZSA9ICJGb3JlY2FzdCBDb25zZW5zdXMsIENyZWRpdCBUZXJtcywgYW5kIFN1YnNlcXVlbnQgUmVwcmljaW5nIgpmcG9zID0gdGV4dC5pbmRleChmb3JlY2FzdF90aXRsZSkKZmVuZCA9IHRleHQuaW5kZXgoZ2VuZF9tYXJrZXIsIGZwb3MpICsgbGVuKGdlbmRfbWFya2VyKQpuZXdfZW50cnkgPSAoCiAgICAiXG4gICAgICAgICAgXG4iCiAgICAnICAgICAgICAgIDxhcnRpY2xlIGNsYXNzPSJwYXBlci1lbnRyeSI+XG4nCiAgICAnICAgICAgICAgICAgPHAgY2xhc3M9InBhcGVyLWtpY2tlciI+UmVzZWFyY2ggaW4gcHJvZ3Jlc3M8L3A+XG4nCiAgICAnICAgICAgICAgICAgPGgzIGNsYXNzPSJwYXBlci10aXRsZSI+SW52ZXN0b3IgU2VudGltZW50IGFuZCBTdG9jayBSZXR1cm4gUHJlZGljdGFiaWxpdHk6IFRoZSBJbmZsdWVuY2Ugb2YgT25saW5lIFN0b2NrIERpc2N1c3Npb24gQm9hcmRzPC9oMz5cbicKICAgICcgICAgICAgICAgICA8cCBjbGFzcz0iYXV0aG9ycyI+PHN0cm9uZz53aXRoPC9zdHJvbmc+IERhbmJpIFBhcmsgYW5kIEdhYmppbiBPaDwvcD5cbicKICAgICcgICAgICAgICAgPC9hcnRpY2xlPicKKQp0ZXh0ID0gdGV4dFs6ZmVuZF0gKyBuZXdfZW50cnkgKyB0ZXh0W2ZlbmQ6XQoKIyBWYWxpZGF0ZSBhbGwgcmVxdWVzdGVkIGNoYW5nZXMuCmlmIHRleHQuY291bnQoaW52ZXN0b3JfdGl0bGUpICE9IDE6CiAgICByYWlzZSBSdW50aW1lRXJyb3IoIkludmVzdG9yIFNlbnRpbWVudCBzaG91bGQgYXBwZWFyIGV4YWN0bHkgb25jZS4iKQppZiAiRk1BIEJlc3QgUGFwZXIgQXdhcmQgU2VtaWZpbmFsaXN0LCBGaW5hbmNpYWwgSW50ZXJtZWRpYXRpb24gJmFtcDsgTWFya2V0cywgMjAyMy4iIG5vdCBpbiB0ZXh0OgogICAgcmFpc2UgUnVudGltZUVycm9yKCJUaGUgcmV2aXNlZCBGTUEgYXdhcmQgbGluZSBpcyBtaXNzaW5nLiIpCmlmICc8cCBjbGFzcz0iYXV0aG9ycyI+PHN0cm9uZz53aXRoPC9zdHJvbmc+IERhbmJpIFBhcmsgYW5kIEdhYmppbiBPaDwvcD4nIG5vdCBpbiB0ZXh0OgogICAgcmFpc2UgUnVudGltZUVycm9yKCJUaGUgcmVzZWFyY2gtaW4tcHJvZ3Jlc3MgY29sbGFib3JhdG9yIGxpbmUgaXMgbWlzc2luZy4iKQoKZ3BvcyA9IHRleHQuaW5kZXgoZ2xvYmFsX3RpdGxlKQpnc3RhcnQgPSB0ZXh0LnJmaW5kKCc8YXJ0aWNsZSBjbGFzcz0icGFwZXItZW50cnkiPicsIDAsIGdwb3MpCmdlbmQgPSB0ZXh0LmluZGV4KGdlbmRfbWFya2VyLCBncG9zKSArIGxlbihnZW5kX21hcmtlcikKaWYgZ2xvYmFsX2F1dGhvciBpbiB0ZXh0W2dzdGFydDpnZW5kXToKICAgIHJhaXNlIFJ1bnRpbWVFcnJvcigiVGhlIEdsb2JhbCBCYW5raW5nIGF1dGhvciBsaW5lIHdhcyBub3QgcmVtb3ZlZC4iKQoKcGFnZS53cml0ZV90ZXh0KHRleHQsIGVuY29kaW5nPSJ1dGYtOCIpCgpmb3Igd29ya2Zsb3dfcGF0aCBpbiAoCiAgICAiLmdpdGh1Yi93b3JrZmxvd3MvcmVvcmdhbml6ZS1pbnZlc3Rvci1zZW50aW1lbnQueW1sIiwKICAgICIuZ2l0aHViL3dvcmtmbG93cy9maXgtcmVzZWFyY2gtZW50cmllcy55bWwiLAopOgogICAgUGF0aCh3b3JrZmxvd19wYXRoKS51bmxpbmsobWlzc2luZ19vaz1UcnVlKQo=' | base64 --decode > /tmp/fix-research.py
-          python /tmp/fix-research.py
+          python - <<'PY'
+          from pathlib import Path
+
+          page = Path("publications.html")
+          text = page.read_text(encoding="utf-8")
+
+          text = text.replace(
+              "FMA 2023 Best Paper Award Semifinalist, Financial Intermediation &amp; Markets.",
+              "FMA Best Paper Award Semifinalist, Financial Intermediation &amp; Markets, 2023.",
+              1,
+          )
+
+          article_start = '<article class="paper-entry">'
+          article_end = "</article>"
+
+          global_title = "Global Banking Networks and Loan Pricing"
+          global_pos = text.index(global_title)
+          global_start = text.rfind(article_start, 0, global_pos)
+          global_end = text.index(article_end, global_pos) + len(article_end)
+          global_block = text[global_start:global_end]
+          global_author = '<p class="authors"><strong>A-Young Park</strong> and Gabjin Oh</p>'
+          if global_author not in global_block:
+              raise RuntimeError("Global Banking author line not found.")
+          global_block = global_block.replace(global_author, "", 1)
+          text = text[:global_start] + global_block + text[global_end:]
+
+          investor_title = "Investor Sentiment and Stock Return Predictability: The Influence of Online Stock Discussion Boards"
+          investor_pos = text.index(investor_title)
+          investor_start = text.rfind(article_start, 0, investor_pos)
+          investor_end = text.index(article_end, investor_pos) + len(article_end)
+          investor_block = text[investor_start:investor_end]
+          if '<p class="paper-kicker">Working paper</p>' not in investor_block:
+              raise RuntimeError("Investor Sentiment is not in Working Papers.")
+          text = text[:investor_start] + text[investor_end:]
+
+          forecast_title = "Forecast Consensus, Credit Terms, and Subsequent Repricing"
+          forecast_pos = text.index(forecast_title)
+          forecast_end = text.index(article_end, forecast_pos) + len(article_end)
+          new_entry = "\n\n".join([
+              '          <article class="paper-entry">',
+              '            <p class="paper-kicker">Research in progress</p>',
+              '            <h3 class="paper-title">Investor Sentiment and Stock Return Predictability: The Influence of Online Stock Discussion Boards</h3>',
+              '            <p class="authors"><strong>with</strong> Danbi Park and Gabjin Oh</p>',
+              '          </article>',
+          ])
+          text = text[:forecast_end] + "\n\n" + new_entry + text[forecast_end:]
+
+          if text.count(investor_title) != 1:
+              raise RuntimeError("Investor Sentiment must appear exactly once.")
+          if "FMA Best Paper Award Semifinalist, Financial Intermediation &amp; Markets, 2023." not in text:
+              raise RuntimeError("Revised FMA award line is missing.")
+          if global_author in text[text.rfind(article_start, 0, text.index(global_title)):text.index(article_end, text.index(global_title))]:
+              raise RuntimeError("Global Banking author line was not removed.")
+
+          page.write_text(text, encoding="utf-8")
+
+          for workflow_path in (
+              ".github/workflows/reorganize-investor-sentiment.yml",
+              ".github/workflows/fix-research-entries.yml",
+          ):
+              Path(workflow_path).unlink(missing_ok=True)
+          PY
 
       - name: Commit changes
         shell: bash
