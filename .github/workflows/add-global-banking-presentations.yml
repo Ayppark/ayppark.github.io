@@ -1,0 +1,53 @@
+name: Add Global Banking presentation history
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/add-global-banking-presentations.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Add presentation history
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('publications.html')
+          text = path.read_text(encoding='utf-8')
+
+          old = '<p class="venue">FMA 2023 Best Paper Award Semifinalist, Financial Intermediation &amp; Markets.</p>'
+          added = '<p class="venue"><strong>Presented at:</strong> Computing in Economics and Finance (CEF), 2023; Workshop of the Asia-Pacific Applied Economics Association, 2023.</p>'
+
+          if old not in text:
+              raise RuntimeError('Global Banking award line was not found.')
+
+          if added not in text:
+              text = text.replace(old, old + '\n            ' + added, 1)
+
+          path.write_text(text, encoding='utf-8')
+
+          workflow = Path('.github/workflows/add-global-banking-presentations.yml')
+          workflow.unlink(missing_ok=True)
+
+          updated = path.read_text(encoding='utf-8')
+          assert added in updated
+          PY
+
+      - name: Commit website update
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add Global Banking presentation history"
+          git push
