@@ -1,0 +1,47 @@
+name: Format PNAS media coverage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/format-media-coverage.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Put media coverage on a separate line
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('publications.html')
+          text = path.read_text(encoding='utf-8')
+
+          old = '''            <p class="paper-links"><a href="https://doi.org/10.1073/pnas.2505434122" target="_blank" rel="noopener noreferrer">DOI</a> · <a href="https://github.com/pangyuj/explosive-sync-proximity/" target="_blank" rel="noopener noreferrer">Code</a> · <a href="https://www.michiganmedicine.org/health-lab/brains-and-stock-markets-follow-same-rules-crisis-study-finds" target="_blank" rel="noopener noreferrer">Media coverage</a></p>'''
+
+          new = '''            <p class="paper-links"><a href="https://doi.org/10.1073/pnas.2505434122" target="_blank" rel="noopener noreferrer">DOI</a> · <a href="https://github.com/pangyuj/explosive-sync-proximity/" target="_blank" rel="noopener noreferrer">Code</a></p>
+            <p class="paper-links"><strong>Media coverage:</strong> Michigan Medicine, <a href="https://www.michiganmedicine.org/health-lab/brains-and-stock-markets-follow-same-rules-crisis-study-finds" target="_blank" rel="noopener noreferrer">“Brains and stock markets follow the same rules in crisis, study finds”</a></p>'''
+
+          if old not in text:
+              raise RuntimeError('Expected PNAS link row was not found.')
+
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          Path('.github/workflows/format-media-coverage.yml').unlink(missing_ok=True)
+          PY
+
+      - name: Commit website update
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Format PNAS media coverage citation"
+          git push
