@@ -1,0 +1,43 @@
+name: Restructure research sections
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/restructure-research.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update research labels
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('publications.html')
+          t = p.read_text()
+          t = t.replace('Working papers, research in progress, and selected peer-reviewed publications.', 'Published papers, working papers, and ongoing research projects.')
+          t = t.replace('<h2 id="publications-title">Selected Publications</h2>', '<h2 id="publications-title">Published Papers</h2>')
+          t = t.replace('<h2 id="working-title">Working Papers</h2>', '<h2 id="working-title">Working Papers</h2>')
+          t = t.replace('<p class="paper-kicker">2025 · PNAS</p>', '<p class="paper-kicker">Published · 2025 · PNAS</p>')
+          t = t.replace('<p class="paper-kicker">2023 · PLOS ONE</p>', '<p class="paper-kicker">Published · 2023 · PLOS ONE</p>')
+          t = t.replace('<p class="paper-kicker">2023 · Frontiers in Physics</p>', '<p class="paper-kicker">Published · 2023 · Frontiers in Physics</p>')
+          t = t.replace('<p class="paper-kicker">2021 · Frontiers in Physics</p>', '<p class="paper-kicker">Published · 2021 · Frontiers in Physics</p>')
+          t = t.replace('<p class="paper-kicker">2017 · Quality &amp; Quantity</p>', '<p class="paper-kicker">Published · 2017 · Quality &amp; Quantity</p>')
+          t = t.replace('Research in Progress</h2>', 'Work in Progress</h2>')
+          t = t.replace('<p class="paper-kicker">Research in progress</p>', '<p class="paper-kicker">Work in progress</p>')
+          p.write_text(t)
+          wf = Path('.github/workflows/restructure-research.yml')
+          wf.unlink()
+          PY
+      - name: Commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Restructure research sections"
+          git push
