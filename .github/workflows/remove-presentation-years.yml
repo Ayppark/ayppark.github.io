@@ -1,0 +1,37 @@
+name: Remove presentation year labels
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/remove-presentation-years.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update conferences format
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('conferences.html')
+          t = p.read_text(encoding='utf-8')
+          replacements = {
+              '<p class="activity-label">2025 and 2023</p>\n            <h3>Global Banking Networks and Loan Pricing</h3>\n            <p>Sydney Banking and Finance Conference; Financial Management Association Annual Meeting; Computing in Economics and Finance; Korean Finance Association Fall Conference.</p>': '<h3>Global Banking Networks and Loan Pricing</h3>\n            <p>Sydney Banking and Finance Conference, 2025.</p>\n            <p>Financial Management Association Annual Meeting, 2023.</p>\n            <p>Computing in Economics and Finance (CEF), 2023.</p>\n            <p>Korean Finance Association Fall Conference, 2023.</p>',
+              '<p class="activity-label">2023</p>\n            <h3>A Network Approach to Optimal Portfolio: Application to the Korean Stock Market</h3>\n            <p>Computing in Economics and Finance.</p>': '<h3>A Network Approach to Optimal Portfolio: Application to the Korean Stock Market</h3>\n            <p>Computing in Economics and Finance (CEF), 2023.</p>'
+          }
+          for old, new in replacements.items():
+              t = t.replace(old, new)
+          p.write_text(t, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add conferences.html
+          git commit -m "Format presentation entries by paper and conference" || exit 0
+          git push
