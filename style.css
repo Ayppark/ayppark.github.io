@@ -539,6 +539,22 @@ footer p {
   }
 }
 
+@media (max-width: 600px) {
+  .top-nav {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: start;
+    column-gap: 18px;
+    row-gap: 8px;
+    overflow-x: visible;
+    padding-bottom: 10px;
+  }
+
+  .top-nav a.active::after {
+    bottom: -3px;
+  }
+}
+
 @media (max-width: 560px) {
   body {
     font-size: 15.5px;
