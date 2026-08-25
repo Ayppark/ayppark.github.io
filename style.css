@@ -541,10 +541,8 @@ footer p {
 
 @media (max-width: 600px) {
   .top-nav {
-    display: grid;
-    grid-template-columns: repeat(3, max-content);
-    justify-content: start;
-    column-gap: 18px;
+    flex-wrap: wrap;
+    column-gap: 14px;
     row-gap: 8px;
     overflow-x: visible;
     padding-bottom: 10px;
