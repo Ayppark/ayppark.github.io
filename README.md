@@ -1,6 +1,6 @@
-# A-Young Park — Academic Homepage
+# Ayoung Park — Academic Homepage
 
-Multi-page static academic website for A-Young Park, Ph.D., Senior Researcher at the Financial Supervisory Service.
+Multi-page static academic website for Ayoung Park, Ph.D., Senior Researcher at the Financial Supervisory Service.
 
 ## Pages
 
